@@ -24,7 +24,9 @@ export class PostService {
   }
 
   findAll() {
-    const postList = this.postRepository.createQueryBuilder('post').getMany();
+    const postList = this.postRepository.find({
+      relations: { category: true },
+    });
     return postList;
   }
 
@@ -32,6 +34,7 @@ export class PostService {
     try {
       const post = this.postRepository
         .createQueryBuilder('post')
+        .leftJoinAndSelect('post.category', 'category')
         .where('post.id = :id', { id: id })
         .getOne();
 
